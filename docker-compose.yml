@@ -1,0 +1,29 @@
+services:
+  icp:
+    image: ${WSO2_ICP_IMAGE}
+    container_name: icp
+    ports:
+      - "${ICP_HTTPS_PORT}:9743"
+    restart: unless-stopped
+
+  mi:
+    image: ${WSO2_MI_IMAGE}
+    container_name: mi
+    depends_on:
+      - icp
+    ports:
+      - "${MI_HTTP_PORT}:8290"
+      - "${MI_HTTPS_PORT}:8253"
+      - "${MI_MGT_PORT}:9164"
+    volumes:
+      # Override MI config (adds dashboard_config)
+      - ./mi/conf/deployment.toml:/home/wso2carbon/wso2mi/conf/deployment.toml:ro
+
+      # Hot-deploy your integration CAR files here
+      - ./mi/carbonapps:/home/wso2carbon/wso2mi/repository/deployment/server/carbonapps
+    environment:
+      - ICP_DASHBOARD_URL=${ICP_DASHBOARD_URL}
+      - ICP_HEARTBEAT_INTERVAL=${ICP_HEARTBEAT_INTERVAL}
+      - ICP_GROUP_ID=${ICP_GROUP_ID}
+      - MI_NODE_ID=${MI_NODE_ID}
+    restart: unless-stopped
