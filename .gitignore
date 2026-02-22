@@ -1,0 +1,11 @@
+# Local env
+env/.env
+*.log
+
+# WSO2 artifacts
+mi/carbonapps/*.car
+
+# OS/IDE noise
+.DS_Store
+.vscode/
+.idea/

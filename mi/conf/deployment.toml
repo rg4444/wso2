@@ -1,0 +1,7 @@
+# Minimal MI configuration for registering with ICP
+
+[dashboard_config]
+dashboard_url = "${env:ICP_DASHBOARD_URL}"
+heartbeat_interval = ${env:ICP_HEARTBEAT_INTERVAL}
+group_id = "${env:ICP_GROUP_ID}"
+node_id = "${env:MI_NODE_ID}"
