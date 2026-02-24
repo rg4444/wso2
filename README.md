@@ -3,7 +3,7 @@
 This repository runs:
 - **WSO2 Micro Integrator (MI)** — integration runtime (APIs, transformations, routing)
 - **WSO2 Integration Control Plane (ICP)** — web management GUI for MI runtime monitoring
-- Optional: **WSO2 API Manager (API-M)** — API governance (separate compose file)
+- Optional: **WSO2 API Manager (API-M)** — API governance (enabled by env flag)
 
 ## What is NOT included here
 **WSO2 Integration Studio** is a developer IDE (desktop application) used to build MI integrations and export `.car` files.
@@ -26,6 +26,14 @@ git clone https://github.com/rg4444/wso2.git .
 ./scripts/up.sh
 ```
 
+## Run everything (MI + ICP + APIM)
+```bash
+./scripts/install.sh
+./scripts/restart.sh
+```
+
+To disable APIM, set `ENABLE_APIM=0` in `env/.env`.
+
 ## Check status
 ```bash
 ./scripts/status.sh
@@ -35,12 +43,17 @@ git clone https://github.com/rg4444/wso2.git .
 ```bash
 ./scripts/logs.sh icp
 ./scripts/logs.sh mi
+./scripts/logs.sh apim
 ```
 
 ## Access
 - ICP UI: https://<host>:9743/
 - MI HTTP: http://<host>:8290/
 - MI HTTPS: https://<host>:8253/
+- API-M Publisher: https://localhost:${APIM_HTTPS_PORT}/publisher
+- API-M Devportal: https://localhost:${APIM_HTTPS_PORT}/devportal
+- API-M Gateway HTTP: http://localhost:${APIM_GW_HTTP_PORT}/
+- API-M Gateway HTTPS: https://localhost:${APIM_GW_HTTPS_PORT}/
 
 ## Deploy integrations
 Put exported `.car` files into:
@@ -50,10 +63,3 @@ mi/carbonapps/
 ```
 
 They will be hot-deployed into MI.
-
-## Optional: start API Manager
-```bash
-docker compose -f docker-compose.yml -f docker-compose.apim.yml --env-file ./env/.env up -d
-```
-
-> NOTE: API Manager is optional. Start only if you need full API lifecycle/governance features.

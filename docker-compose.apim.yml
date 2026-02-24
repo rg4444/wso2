@@ -1,11 +1,11 @@
 services:
   apim:
-    # NOTE: Choose an explicit version tag later; keep this optional.
-    # Example tags vary by release; do not use "latest" in real deployments.
-    image: wso2/wso2am:4.4.0
+    image: ${WSO2_APIM_IMAGE}
     container_name: apim
+    environment:
+      - JVM_MEM_OPTS=${APIM_JVM_MEM_OPTS}
     ports:
-      - "9443:9443"  # APIM Publisher/DevPortal (HTTPS)
-      - "8280:8280"  # APIM Gateway HTTP
-      - "8243:8243"  # APIM Gateway HTTPS
+      - "${APIM_HTTPS_PORT}:9443"
+      - "${APIM_GW_HTTP_PORT}:8280"
+      - "${APIM_GW_HTTPS_PORT}:8243"
     restart: unless-stopped
