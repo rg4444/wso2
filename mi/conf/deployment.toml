@@ -1,11 +1,16 @@
-# Minimal MI configuration for ICP registration
+# --- Required server section ---
+[server]
+hostname = "mi"
+node_ip = "127.0.0.1"
 
+# --- ICP registration ---
 [dashboard_config]
 dashboard_url = "https://icp:9743/dashboard/api/"
 heartbeat_interval = 5
 group_id = "sandbox"
 node_id = "mi-node-1"
 
+# --- Internal APIs ---
 [internal_apis]
 enabled = true
 
