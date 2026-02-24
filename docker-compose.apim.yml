@@ -6,6 +6,7 @@ services:
       - JVM_MEM_OPTS=${APIM_JVM_MEM_OPTS}
     ports:
       - "${APIM_HTTPS_PORT}:9443"
+      - "${APIM_HTTP_PORT}:9763"
       - "${APIM_GW_HTTP_PORT}:8280"
       - "${APIM_GW_HTTPS_PORT}:8243"
     volumes:
