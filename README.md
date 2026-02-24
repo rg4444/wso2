@@ -68,3 +68,24 @@ mi/carbonapps/
 ```
 
 They will be hot-deployed into MI.
+
+## APIM HTTP UI workaround (LAN/lab)
+For one-command startup with APIM portal auto-patching:
+
+- Ensure `ENABLE_APIM=1` in `env/.env`.
+- Set `APIM_PUBLIC_HOST=10.0.0.5` (or your LAN IP/DNS).
+- Set `APIM_UI_PROTOCOL=http`.
+
+Then run:
+
+```bash
+./scripts/restart.sh
+```
+
+Access:
+- `http://10.0.0.5:9763/publisher`
+- `http://10.0.0.5:9763/devportal`
+- `http://10.0.0.5:9763/admin`
+
+> ⚠️ This HTTP mode is for LAN/lab use only; do not use it for production internet-facing deployments.
+

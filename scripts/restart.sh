@@ -7,3 +7,6 @@ source ./scripts/compose.sh
 compose_cmd down
 compose_cmd up -d
 compose_cmd ps
+
+# Patch portals to use HTTP/LAN host (avoid TLS SAN/IP issue)
+./scripts/apim_portals_patch.sh

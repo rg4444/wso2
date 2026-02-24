@@ -1,2 +1,6 @@
 [server]
-hostname = "10.0.0.5"
+hostname = "${APIM_PUBLIC_HOST}"
+
+[transport.http]
+enabled = true
+port = 9763
