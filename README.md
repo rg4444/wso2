@@ -26,12 +26,15 @@ git clone https://github.com/rg4444/wso2.git .
 ./scripts/up.sh
 ```
 
+`./scripts/install.sh` now keeps `env/.env` in sync by appending any missing variables from `env/.env.example` without overwriting your existing values.
+
 ## Run everything (MI + ICP + APIM)
 ```bash
 ./scripts/install.sh
 ./scripts/restart.sh
 ```
 
+Set `ENABLE_APIM=1` in `env/.env` to include API-M in the one-command `./scripts/restart.sh` flow.
 To disable APIM, set `ENABLE_APIM=0` in `env/.env`.
 
 ## Check status
