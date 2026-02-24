@@ -53,10 +53,12 @@ To disable APIM, set `ENABLE_APIM=0` in `env/.env`.
 - ICP UI: https://<host>:9743/
 - MI HTTP: http://<host>:8290/
 - MI HTTPS: https://<host>:8253/
-- API-M Publisher: https://localhost:${APIM_HTTPS_PORT}/publisher
-- API-M Devportal: https://localhost:${APIM_HTTPS_PORT}/devportal
+- API-M Publisher (LAN example): https://10.0.0.5:9443/publisher
+- API-M Devportal (LAN example): https://10.0.0.5:9443/devportal
 - API-M Gateway HTTP: http://localhost:${APIM_GW_HTTP_PORT}/
 - API-M Gateway HTTPS: https://localhost:${APIM_GW_HTTPS_PORT}/
+
+If API-M login redirects to `localhost`, update Service Provider callback URLs in Carbon at `https://<host>:9443/carbon` for both **API Publisher** and **Devportal** applications to use your LAN host.
 
 ## Deploy integrations
 Put exported `.car` files into:
