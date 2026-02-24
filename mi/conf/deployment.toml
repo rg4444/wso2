@@ -1,12 +1,11 @@
 # Minimal MI configuration for ICP registration
 
 [dashboard_config]
-dashboard_url = "${env:ICP_DASHBOARD_URL}"
-heartbeat_interval = ${env:ICP_HEARTBEAT_INTERVAL}
-group_id = "${env:ICP_GROUP_ID}"
-node_id = "${env:MI_NODE_ID}"
+dashboard_url = "https://icp:9743/dashboard/api/"
+heartbeat_interval = 5
+group_id = "sandbox"
+node_id = "mi-node-1"
 
-# Enable internal APIs (health served on 9201)
 [internal_apis]
 enabled = true
 
