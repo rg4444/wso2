@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   icp:
     image: ${WSO2_ICP_IMAGE}
