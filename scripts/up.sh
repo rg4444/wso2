@@ -3,5 +3,6 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
 
-docker compose --env-file ./env/.env up -d
-docker compose --env-file ./env/.env ps
+source ./scripts/compose.sh
+compose_cmd up -d
+compose_cmd ps
