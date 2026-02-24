@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   icp:
     image: ${WSO2_ICP_IMAGE}
@@ -16,11 +18,15 @@ services:
       - "${MI_HTTPS_PORT}:8253"
       - "${MI_MGT_PORT}:9164"
     volumes:
-      # Override MI config (adds dashboard_config)
+      # Mount to BOTH possible MI homes (versioned + non-versioned)
       - ./mi/conf/deployment.toml:/home/wso2carbon/wso2mi/conf/deployment.toml:ro
+      - ./mi/conf/deployment.toml:/home/wso2carbon/wso2mi-4.4.0/conf/deployment.toml:ro
+      - ./mi/conf/deployment.toml:/home/wso2carbon/wso2mi-4.5.0/conf/deployment.toml:ro
 
-      # Hot-deploy your integration CAR files here
       - ./mi/carbonapps:/home/wso2carbon/wso2mi/repository/deployment/server/carbonapps
+      - ./mi/carbonapps:/home/wso2carbon/wso2mi-4.4.0/repository/deployment/server/carbonapps
+      - ./mi/carbonapps:/home/wso2carbon/wso2mi-4.5.0/repository/deployment/server/carbonapps
+
     environment:
       - ICP_DASHBOARD_URL=${ICP_DASHBOARD_URL}
       - ICP_HEARTBEAT_INTERVAL=${ICP_HEARTBEAT_INTERVAL}
