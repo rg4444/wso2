@@ -48,4 +48,31 @@ else
   echo "    Added ${appended_count} missing variable(s) to env/.env"
 fi
 
+
+if [[ -f "${ENV_FILE}" ]]; then
+  read_env_value() {
+    local key="$1"
+    local value
+    value="$(grep -E "^[[:space:]]*${key}=" "${ENV_FILE}" | tail -n1 | sed -E "s/^[[:space:]]*${key}=//" | sed -E 's/^[[:space:]]+|[[:space:]]+$//g')"
+    value="${value%\"}"
+    value="${value#\"}"
+    printf '%s' "${value}"
+  }
+
+  enable_apim="$(read_env_value ENABLE_APIM)"
+  if [[ "${enable_apim:-0}" == "1" ]]; then
+    apim_http_port="$(read_env_value APIM_HTTP_PORT)"
+    if [[ -z "${apim_http_port}" ]]; then
+      printf "\nAPIM_HTTP_PORT=9763\n" >> "${ENV_FILE}"
+      echo "    Added APIM_HTTP_PORT=9763 (required when ENABLE_APIM=1)"
+    fi
+
+    apim_public_host="$(read_env_value APIM_PUBLIC_HOST)"
+    if [[ -z "${apim_public_host}" ]]; then
+      printf "\nAPIM_PUBLIC_HOST=10.0.0.5\n" >> "${ENV_FILE}"
+      echo "    Added APIM_PUBLIC_HOST=10.0.0.5 (required when ENABLE_APIM=1)"
+    fi
+  fi
+fi
+
 echo "[*] Done."

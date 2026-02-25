@@ -4,8 +4,11 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ENV_FILE="${ROOT_DIR}/env/.env"
 
+# Load env/.env safely (only KEY=VALUE lines; ignore everything else)
+set -a
 # shellcheck disable=SC1090
-source "${ENV_FILE}"
+. <(grep -E '^[A-Za-z_][A-Za-z0-9_]*=' "${ENV_FILE}" | sed 's/\r$//')
+set +a
 
 if [[ "${ENABLE_APIM:-0}" != "1" ]]; then
   exit 0
