@@ -90,6 +90,12 @@ if [[ -f "${ENV_FILE}" ]]; then
       printf "\nAPIM_UI_PORT=%s\n" "${apim_ui_port}" >> "${ENV_FILE}"
       echo "    Added APIM_UI_PORT=${apim_ui_port} (required when ENABLE_APIM=1)"
     fi
+
+    apim_jvm="$(read_env_value APIM_JVM_MEM_OPTS)"
+    if [[ -z "${apim_jvm}" ]]; then
+      printf "\nAPIM_JVM_MEM_OPTS=\"-Xms512m -Xmx512m\"\n" >> "${ENV_FILE}"
+      echo "    Added APIM_JVM_MEM_OPTS=\"-Xms512m -Xmx512m\" (safe default for small VPS)"
+    fi
   fi
 fi
 
