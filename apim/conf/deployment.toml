@@ -1,5 +1,5 @@
 [server]
-hostname = "${APIM_PUBLIC_HOST}"
+hostname = "${env:APIM_PUBLIC_HOST}"
 
 # In LAN/lab, using an IP with HTTPS causes TLS failures because the default
 # WSO2 cert does not include the IP in SubjectAltName (SAN).
@@ -7,7 +7,12 @@ hostname = "${APIM_PUBLIC_HOST}"
 # To avoid 500 errors on /publisher login in lab mode, set:
 #   APIM_UI_PROTOCOL=http
 #   APIM_UI_PORT=9763
-base_path = "${APIM_UI_PROTOCOL}://${APIM_PUBLIC_HOST}:${APIM_UI_PORT}"
+base_path = "${env:APIM_UI_PROTOCOL}://${env:APIM_PUBLIC_HOST}:${env:APIM_UI_PORT}"
+
+[super_admin]
+username = "admin"
+password = "admin"
+create_admin_account = true
 
 [transport.http]
 enabled = true
