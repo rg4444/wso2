@@ -10,5 +10,7 @@ services:
       - "${APIM_GW_HTTP_PORT}:8280"
       - "${APIM_GW_HTTPS_PORT}:8243"
     volumes:
-      - ./apim/conf/deployment.toml:/home/wso2carbon/wso2am/repository/conf/deployment.toml
+      # NOTE: API-M 4.4.0 uses a versioned home folder in the official image.
+      # Mounting to the non-versioned path is ignored and leaves hostname=localhost.
+      - ./apim/conf/deployment.toml:/home/wso2carbon/wso2am-4.4.0/repository/conf/deployment.toml
     restart: unless-stopped

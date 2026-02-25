@@ -53,15 +53,22 @@ To disable APIM, set `ENABLE_APIM=0` in `env/.env`.
 - ICP UI: https://<host>:9743/
 - MI HTTP: http://<host>:8290/
 - MI HTTPS: https://<host>:8253/
-- API-M Publisher (HTTP UI mode): http://<APIM_PUBLIC_HOST>:<APIM_HTTP_PORT>/publisher
-- API-M Devportal (HTTP UI mode): http://<APIM_PUBLIC_HOST>:<APIM_HTTP_PORT>/devportal
+- API-M Publisher (HTTP UI mode): http://<APIM_PUBLIC_HOST>:<APIM_UI_PORT>/publisher
+- API-M Devportal (HTTP UI mode): http://<APIM_PUBLIC_HOST>:<APIM_UI_PORT>/devportal
 - API-M Gateway HTTP: http://localhost:${APIM_GW_HTTP_PORT}/
 - API-M Gateway HTTPS: https://localhost:${APIM_GW_HTTPS_PORT}/
 
 If API-M login redirects to `localhost`, update Service Provider callback URLs in Carbon at `https://<host>:9443/carbon` for both **API Publisher** and **Devportal** applications to use your LAN host.
 
-If `ENABLE_APIM=1`, Publisher is available at `http://<APIM_PUBLIC_HOST>:<APIM_HTTP_PORT>/publisher` when `APIM_UI_PROTOCOL=http`. `APIM_HTTP_PORT` defaults to `9763` if not set.
+If `ENABLE_APIM=1`, Publisher is available at `http://<APIM_PUBLIC_HOST>:<APIM_UI_PORT>/publisher` when `APIM_UI_PROTOCOL=http`. `APIM_UI_PORT` defaults to `9763` if not set.
 
+
+## Troubleshooting
+- If Compose variables resolve as blank, start with `./scripts/restart.sh` or run Compose with an explicit env file: `docker compose --env-file env/.env ...`
+- If API-M `/publisher` returns HTTP 500 with a SAN/TLS error, use HTTP UI mode in `env/.env`:
+  - `APIM_UI_PROTOCOL=http`
+  - `APIM_UI_PORT=9763`
+  - open `http://<host>:9763/publisher`
 
 ## Deploy integrations
 Put exported `.car` files into:

@@ -49,8 +49,10 @@ fi
 HOST="$(get_env APIM_PUBLIC_HOST 10.0.0.5)"
 PROTO="$(get_env APIM_UI_PROTOCOL http)"
 
-# Pick port based on protocol (http->APIM_HTTP_PORT, https->APIM_HTTPS_PORT)
-if [[ "${PROTO}" == "https" ]]; then
+UI_PORT="$(get_env APIM_UI_PORT)"
+if [[ -n "${UI_PORT}" ]]; then
+  PORT="${UI_PORT}"
+elif [[ "${PROTO}" == "https" ]]; then
   PORT="$(get_env APIM_HTTPS_PORT 9443)"
 else
   PORT="$(get_env APIM_HTTP_PORT 9763)"
