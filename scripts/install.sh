@@ -72,6 +72,24 @@ if [[ -f "${ENV_FILE}" ]]; then
       printf "\nAPIM_PUBLIC_HOST=10.0.0.5\n" >> "${ENV_FILE}"
       echo "    Added APIM_PUBLIC_HOST=10.0.0.5 (required when ENABLE_APIM=1)"
     fi
+
+    apim_ui_protocol="$(read_env_value APIM_UI_PROTOCOL)"
+    if [[ -z "${apim_ui_protocol}" ]]; then
+      apim_ui_protocol="http"
+      printf "\nAPIM_UI_PROTOCOL=%s\n" "${apim_ui_protocol}" >> "${ENV_FILE}"
+      echo "    Added APIM_UI_PROTOCOL=${apim_ui_protocol} (required when ENABLE_APIM=1)"
+    fi
+
+    apim_ui_port="$(read_env_value APIM_UI_PORT)"
+    if [[ -z "${apim_ui_port}" ]]; then
+      if [[ "${apim_ui_protocol}" == "https" ]]; then
+        apim_ui_port="9443"
+      else
+        apim_ui_port="9763"
+      fi
+      printf "\nAPIM_UI_PORT=%s\n" "${apim_ui_port}" >> "${ENV_FILE}"
+      echo "    Added APIM_UI_PORT=${apim_ui_port} (required when ENABLE_APIM=1)"
+    fi
   fi
 fi
 
