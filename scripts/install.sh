@@ -3,6 +3,34 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
+require_cmd() {
+  local cmd="$1"
+  local hint="$2"
+  if ! command -v "${cmd}" >/dev/null 2>&1; then
+    echo "[!] Missing required command: ${cmd}"
+    echo "    ${hint}"
+    exit 1
+  fi
+}
+
+echo "[*] Running preflight checks..."
+require_cmd awk "Install base utilities: sudo apt-get update && sudo apt-get install -y gawk"
+require_cmd rg "Install ripgrep: sudo apt-get update && sudo apt-get install -y ripgrep"
+require_cmd docker "Install Docker first: ./scripts/install_docker_ubuntu.sh"
+
+if ! docker compose version >/dev/null 2>&1; then
+  echo "[!] docker compose plugin is required but not available."
+  echo "    Install Docker Compose plugin: sudo apt-get update && sudo apt-get install -y docker-compose-plugin"
+  exit 1
+fi
+
+if ! docker info >/dev/null 2>&1; then
+  echo "[!] Docker daemon is not reachable for user '${USER}'."
+  echo "    Start Docker: sudo systemctl enable --now docker"
+  echo "    Optional: allow non-root usage: sudo usermod -aG docker ${USER} && newgrp docker"
+  exit 1
+fi
+
 echo "[*] Preparing env file..."
 mkdir -p "${ROOT_DIR}/env"
 ENV_FILE="${ROOT_DIR}/env/.env"
