@@ -16,5 +16,5 @@ services:
       # NOTE: API-M 4.4.0 uses a versioned home folder in the official image.
       # Mounting to the non-versioned path is ignored and leaves hostname=localhost.
       - ./apim/conf/deployment.toml:/home/wso2carbon/wso2am-4.4.0/repository/conf/deployment.toml
-      - ./certs/apim.local.jks:/home/wso2carbon/apim.local.jks:ro
+      - ./certs/apim.local.jks:/home/wso2carbon/wso2am-4.4.0/repository/resources/security/apim.local.jks:ro
     restart: unless-stopped
