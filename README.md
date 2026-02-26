@@ -22,6 +22,13 @@ sudo chown -R $USER:$USER /home/wso2
 cd /home/wso2
 
 git clone https://github.com/rg4444/wso2.git .
+
+# One-time: install Docker Engine + Compose plugin on Ubuntu
+./scripts/install_docker_ubuntu.sh
+
+# Validate host readiness (docker, compose, memory, env)
+./scripts/doctor.sh
+
 ./scripts/install.sh
 ./scripts/up.sh
 ```
@@ -36,6 +43,21 @@ git clone https://github.com/rg4444/wso2.git .
 
 Set `ENABLE_APIM=1` in `env/.env` to include API-M in the one-command `./scripts/restart.sh` flow.
 To disable APIM, set `ENABLE_APIM=0` in `env/.env`.
+
+
+## Reliability improvements for Ubuntu Docker installs
+This repo now includes stronger preflight behavior to reduce first-run failures:
+- `scripts/install.sh` validates required tools (`docker`, `docker compose`, `awk`, `rg`) and fails early with actionable fix commands.
+- `scripts/install_docker_ubuntu.sh` provides a standard Ubuntu Docker + Compose plugin installation flow.
+- `scripts/doctor.sh` performs readiness checks (daemon access, compose plugin, env file presence, and memory warning for APIM).
+
+Suggested install order on a fresh VM:
+```bash
+./scripts/install_docker_ubuntu.sh
+./scripts/doctor.sh
+./scripts/install.sh
+./scripts/restart.sh
+```
 
 ## Check status
 ```bash
