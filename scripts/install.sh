@@ -31,7 +31,16 @@ if ! docker info >/dev/null 2>&1; then
   exit 1
 fi
 
-
+docker_bin="$(command -v docker || true)"
+if [[ "${docker_bin}" == /snap/bin/* ]]; then
+  echo "[!] Docker CLI is provided by snap (${docker_bin})."
+  echo "    This packaging frequently causes 'cannot stop container: permission denied'."
+  echo "    Recommended cure (Ubuntu):"
+  echo "      sudo snap remove docker"
+  echo "      ./scripts/install_docker_ubuntu.sh"
+  echo "      newgrp docker"
+  exit 1
+fi
 
 if [[ -r /proc/sys/net/ipv4/conf/all/rp_filter ]]; then
   rp_all="$(cat /proc/sys/net/ipv4/conf/all/rp_filter)"
