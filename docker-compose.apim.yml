@@ -2,6 +2,8 @@ services:
   apim:
     image: ${WSO2_APIM_IMAGE}
     container_name: apim
+    extra_hosts:
+      - "apim.local:172.20.0.2"
     env_file:
       - ./env/.env
     environment:
