@@ -1,5 +1,5 @@
 [server]
-hostname = "${env:APIM_PUBLIC_HOST}"
+hostname = "apim.local"
 base_path = "${env:APIM_UI_PROTOCOL}://${env:APIM_PUBLIC_HOST}:${env:APIM_UI_PORT}"
 server_role = "default"
 
@@ -27,11 +27,11 @@ password = "wso2carbon"
 url = "jdbc:h2:./repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE"
 
 [keystore.tls]
-file_name =  "wso2carbon.jks"
-type =  "JKS"
-password =  "wso2carbon"
-alias =  "wso2carbon"
-key_password =  "wso2carbon"
+file_name = "/home/wso2carbon/apim.local.jks"
+type = "JKS"
+password = "wso2carbon"
+alias = "apim-local"
+key_password = "wso2carbon"
 
 [[apim.gateway.environment]]
 name = "Default"
