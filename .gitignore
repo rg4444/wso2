@@ -9,3 +9,9 @@ mi/carbonapps/*.car
 .DS_Store
 .vscode/
 .idea/
+
+# TLS material (keep out of git)
+certs/*.key
+certs/*.crt
+certs/*.p12
+certs/*.jks

@@ -46,16 +46,30 @@ if [[ "${ENABLE_APIM}" != "1" ]]; then
   exit 0
 fi
 
-HOST="$(get_env APIM_PUBLIC_HOST 10.0.0.5)"
-PROTO="$(get_env APIM_UI_PROTOCOL http)"
+HOST="$(get_env APIM_PUBLIC_HOST apim.local)"
+PROTO="$(get_env APIM_UI_PROTOCOL https)"
+UI_BASE_URL="${APIM_UI_BASE_URL:-}"
 
-UI_PORT="$(get_env APIM_UI_PORT)"
-if [[ -n "${UI_PORT}" ]]; then
-  PORT="${UI_PORT}"
-elif [[ "${PROTO}" == "https" ]]; then
-  PORT="$(get_env APIM_HTTPS_PORT 9443)"
+if [[ -n "${UI_BASE_URL}" ]]; then
+  PROTO="$(printf "%s" "${UI_BASE_URL}" | sed -E 's#^([a-zA-Z]+)://.*#\1#')"
+  HOST="$(printf "%s" "${UI_BASE_URL}" | sed -E 's#^[a-zA-Z]+://([^:/]+).*$#\1#')"
+  PORT="$(printf "%s" "${UI_BASE_URL}" | sed -nE 's#^[a-zA-Z]+://[^:/]+:([0-9]+).*$#\1#p')"
+  if [[ -z "${PORT}" ]]; then
+    if [[ "${PROTO}" == "https" ]]; then
+      PORT=9443
+    else
+      PORT=9763
+    fi
+  fi
 else
-  PORT="$(get_env APIM_HTTP_PORT 9763)"
+  UI_PORT="$(get_env APIM_UI_PORT)"
+  if [[ -n "${UI_PORT}" ]]; then
+    PORT="${UI_PORT}"
+  elif [[ "${PROTO}" == "https" ]]; then
+    PORT="$(get_env APIM_HTTPS_PORT 9443)"
+  else
+    PORT="$(get_env APIM_HTTP_PORT 9763)"
+  fi
 fi
 
 echo "[*] Patching APIM portal settings.json to ${PROTO}://${HOST}:${PORT} ..."
@@ -75,7 +89,14 @@ fi
 
 for f in ${files}; do
   echo "  - Updating ${f}"
-  sed -i -E     -e "s/\"host\"[[:space:]]*:[[:space:]]*\"localhost\"/\"host\": \"${HOST}\"/g"     -e "s/\"host\"[[:space:]]*:[[:space:]]*\"127\.0\.0\.1\"/\"host\": \"${HOST}\"/g"     -e "s/\"protocol\"[[:space:]]*:[[:space:]]*\"https\"/\"protocol\": \"${PROTO}\"/g"     -e "s/\"protocol\"[[:space:]]*:[[:space:]]*\"http\"/\"protocol\": \"${PROTO}\"/g"     -e "s/\"port\"[[:space:]]*:[[:space:]]*9443/\"port\": ${PORT}/g"     -e "s/\"port\"[[:space:]]*:[[:space:]]*9763/\"port\": ${PORT}/g"     "${f}" || true
+  sed -i -E \
+    -e "s/\"host\"[[:space:]]*:[[:space:]]*\"localhost\"/\"host\": \"${HOST}\"/g" \
+    -e "s/\"host\"[[:space:]]*:[[:space:]]*\"127\.0\.0\.1\"/\"host\": \"${HOST}\"/g" \
+    -e "s/\"protocol\"[[:space:]]*:[[:space:]]*\"https\"/\"protocol\": \"${PROTO}\"/g" \
+    -e "s/\"protocol\"[[:space:]]*:[[:space:]]*\"http\"/\"protocol\": \"${PROTO}\"/g" \
+    -e "s/\"port\"[[:space:]]*:[[:space:]]*9443/\"port\": ${PORT}/g" \
+    -e "s/\"port\"[[:space:]]*:[[:space:]]*9763/\"port\": ${PORT}/g" \
+    "${f}" || true
 done
 '
 echo "[*] Portal settings patch complete."

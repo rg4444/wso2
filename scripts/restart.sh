@@ -5,6 +5,19 @@ cd "$ROOT_DIR"
 
 source ./scripts/compose.sh
 
+ENV_FILE="${ROOT_DIR}/env/.env"
+if [[ -z "${APIM_PUBLIC_HOST:-}" && -f "${ENV_FILE}" ]]; then
+  APIM_PUBLIC_HOST="$(awk -F= '$1=="APIM_PUBLIC_HOST"{v=$0} END{sub(/^[^=]*=/,"",v); print v}' "${ENV_FILE}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' -e "s/^\"//" -e "s/\"$//")"
+fi
+
+if [[ -z "${APIM_PUBLIC_HOST:-}" ]]; then
+  echo "[!] APIM_PUBLIC_HOST is not set. Put it in env/.env (e.g., APIM_PUBLIC_HOST=apim.local)."
+  exit 2
+fi
+
+APIM_UI_BASE_URL="https://${APIM_PUBLIC_HOST}:9443"
+
+
 handle_stop_error() {
   local output="$1"
   if [[ "${output}" == *"permission denied"* ]]; then
@@ -36,5 +49,5 @@ printf '%s\n' "${down_output}"
 compose_cmd up -d
 compose_cmd ps
 
-# Patch portals to use HTTP/LAN host (avoid TLS SAN/IP issue)
-./scripts/apim_portals_patch.sh
+# Patch portals to use configured APIM UI base URL
+APIM_UI_BASE_URL="${APIM_UI_BASE_URL}" ./scripts/apim_portals_patch.sh

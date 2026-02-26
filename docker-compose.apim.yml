@@ -2,8 +2,11 @@ services:
   apim:
     image: ${WSO2_APIM_IMAGE}
     container_name: apim
+    env_file:
+      - ./env/.env
     environment:
       - JVM_MEM_OPTS=${APIM_JVM_MEM_OPTS}
+      - APIM_PUBLIC_HOST=${APIM_PUBLIC_HOST}
     ports:
       - "${APIM_HTTPS_PORT}:9443"
       - "${APIM_HTTP_PORT:-9763}:9763"
@@ -13,4 +16,5 @@ services:
       # NOTE: API-M 4.4.0 uses a versioned home folder in the official image.
       # Mounting to the non-versioned path is ignored and leaves hostname=localhost.
       - ./apim/conf/deployment.toml:/home/wso2carbon/wso2am-4.4.0/repository/conf/deployment.toml
+      - ./certs/apim.local.jks:/home/wso2carbon/apim.local.jks:ro
     restart: unless-stopped
