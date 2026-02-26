@@ -49,6 +49,14 @@ if command -v ip >/dev/null 2>&1; then
 fi
 
 if command -v docker >/dev/null 2>&1; then
+  docker_bin="$(command -v docker || true)"
+  if [[ "${docker_bin}" == /snap/bin/* ]]; then
+    warn "Docker CLI comes from snap (${docker_bin}); snap docker commonly causes container stop/start permission issues"
+    warn "Recommended: remove snap docker and reinstall using ./scripts/install_docker_ubuntu.sh"
+  else
+    ok "Docker CLI path: ${docker_bin}"
+  fi
+
   if docker compose version >/dev/null 2>&1; then
     ok "Docker Compose plugin available"
   else
