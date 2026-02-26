@@ -31,6 +31,30 @@ if ! docker info >/dev/null 2>&1; then
   exit 1
 fi
 
+
+
+if [[ -r /proc/sys/net/ipv4/conf/all/rp_filter ]]; then
+  rp_all="$(cat /proc/sys/net/ipv4/conf/all/rp_filter)"
+  if [[ "${rp_all}" != "0" ]]; then
+    echo "[!] net.ipv4.conf.all.rp_filter=${rp_all} detected."
+    echo "    This can drop valid LAN traffic on Docker hosts after reboot."
+    echo "    Recommended (persist):"
+    echo "      sudo tee /etc/sysctl.d/99-wso2-network.conf >/dev/null <<'EOF'"
+    echo "      net.ipv4.conf.all.rp_filter=0"
+    echo "      net.ipv4.conf.default.rp_filter=0"
+    echo "      EOF"
+    echo "      sudo sysctl --system"
+  fi
+fi
+
+if groups "${USER}" 2>/dev/null | rg -q "\bdocker\b"; then
+  echo "[*] User '${USER}' is in docker group"
+else
+  echo "[!] User '${USER}' is not in docker group."
+  echo "    Non-root docker commands may fail after reboot."
+  echo "    Fix: sudo usermod -aG docker ${USER} && re-login"
+fi
+
 echo "[*] Preparing env file..."
 mkdir -p "${ROOT_DIR}/env"
 ENV_FILE="${ROOT_DIR}/env/.env"
